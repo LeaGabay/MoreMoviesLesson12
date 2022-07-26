@@ -1,0 +1,33 @@
+<resources>
+    <!--Insert Movie -->
+    <string name="app_name">My Movies</string>
+    <string name="viewTitle">Movie Title</string>
+    <string name="hintTitle">Enter movie title here</string>
+    <string name="viewGenre">Genre</string>
+    <string name="hintGenre">Enter genre here</string>
+    <string name="viewYear">Year</string>
+    <string name="hintYear">Enter year of release here</string>
+    <string name="rating">Rating</string>
+    <string name="insertBtn">insert</string>
+    <string name="showBtn">show list</string>
+
+    <!-- Rating -->
+    <string-array name="ratingArray">
+        <item>G</item>
+        <item>PG</item>
+        <item>PG13</item>
+        <item>NC16</item>
+        <item>M18</item>
+        <item>R21</item>
+    </string-array>
+
+    <!-- Show Movie -->
+    <string name="btnRating">show all movies with this rating</string>
+
+    <!-- Modify Movie -->
+    <string name="tvID">Movie ID</string>
+    <string name="btnUpdate">update</string>
+    <string name="btnDelete">delete</string>
+    <string name="btnCancel">cancel</string>
+
+</resources>
