@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,13 +19,14 @@ import java.util.Arrays;
 public class ShowActivity extends AppCompatActivity {
 
     ArrayList<Movies> al;
+    ArrayList<String> ratingsList;
+
     CustomAdapter aa;
+    ArrayAdapter<String> ratingAdapter;
 
     ListView lv;
     Spinner spinnerRating;
     Button btnRating;
-    ArrayList<String> ratingsList;
-    ArrayAdapter ratingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,53 +34,57 @@ public class ShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
 
         String[] ratings = getResources().getStringArray(R.array.ratingArray);
-        spinnerRating = findViewById(R.id.spinnerRating);
-        lv = findViewById(R.id.lv);
-        btnRating = findViewById(R.id.btnRating);
-        ratingsList = new ArrayList<>(Arrays.asList(ratings));
 
+        spinnerRating = findViewById(R.id.spinnerRating);
+        lv = findViewById(R.id.listView);
+        btnRating = findViewById(R.id.btnRating);
+
+        ratingsList = new ArrayList<String>(Arrays.asList(ratings));
+        ratingsList.add(0,"Filter by rating");
         al = new ArrayList<>();
+
         aa = new CustomAdapter(this, R.layout.row, al);
-        ratingAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ratingsList);
+        ratingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ratingsList);
 
         DBHelper dbh = new DBHelper(ShowActivity.this);
+
         al.clear();
         al.addAll(dbh.getAllMovies());
 
-        lv.setAdapter(aa);
         spinnerRating.setAdapter(ratingAdapter);
+        lv.setAdapter(aa);
         spinnerRating.setSelection(0);
 
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!btnRating.isPressed()){
+                al.clear();
+                al.addAll(dbh.getAllMovies());
+                if (spinnerRating.getSelectedItem().toString().equals("Filter by rating")) {
+
+                    Toast.makeText(ShowActivity.this, "Please select a rating", Toast.LENGTH_SHORT).show();
+
+                } else if (spinnerRating.getSelectedItem().toString().equals("View all movies")) {
+
                     al.clear();
                     al.addAll(dbh.getAllMovies());
-                } else {
-                    al.clear();
-                    al.addAll(dbh.getAllMovies(spinnerRating.getSelectedItem().toString()));
-                }
-                aa.notifyDataSetChanged();
-            }
-        });
-
-        spinnerRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position == 0){
                     ratingsList.set(0, "Filter by rating");
 
+
                 } else {
+
+                    for (int i = 0; i < spinnerRating.getCount(); i++) {
+                        if (spinnerRating.getSelectedItemPosition() == i) {
+                            al.clear();
+                            al.addAll(dbh.getAllMovies(String.valueOf(spinnerRating.getItemAtPosition(i))));
+
+                        }
+                    }
                     ratingsList.set(0, "View all movies");
+
                 }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                ratingAdapter.notifyDataSetChanged();
+                aa.notifyDataSetChanged();
             }
         });
 

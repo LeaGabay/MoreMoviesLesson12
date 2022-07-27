@@ -5,9 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -15,6 +19,9 @@ public class EditActivity extends AppCompatActivity {
     EditText etID, etTitle, etGenre, etYear;
     Spinner spinnerRating;
     Button btnUpdate, btnDelete, btnCancel;
+
+    ArrayList<String> ratingsList;
+    ArrayAdapter<String> ratingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +44,22 @@ public class EditActivity extends AppCompatActivity {
 
         DBHelper dbh = new DBHelper(EditActivity.this);
 
-        etID.setFocusable(false);
+        etID.setEnabled(false);
         etID.setHint(String.valueOf(data.getId()));
 
         etTitle.setText(data.getTitle());
         etYear.setText(String.valueOf(data.getYear()));
         etGenre.setText(data.getGenre());
 
-        if (data.getRating() == spinnerRating.getSelectedItem().toString()){
-            spinnerRating.setSelection(spinnerRating.getSelectedItemPosition());
+        String[] ratings = getResources().getStringArray(R.array.ratingArray);
+        ratingsList = new ArrayList<String>(Arrays.asList(ratings));
+        ratingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ratingsList);
+        spinnerRating.setAdapter(ratingAdapter);
+
+        for(int a = 0; a < ratingsList.size(); a++){
+            if(ratingsList.get(a).equals(data.getRating())){
+                spinnerRating.setSelection(a);
+            }
         }
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +74,7 @@ public class EditActivity extends AppCompatActivity {
                 dbh.updateMovie(data);
                 dbh.close();
 
-                Intent i = new Intent(EditActivity.this, MainActivity.class);
+                Intent i = new Intent(EditActivity.this, ShowActivity.class);
                 startActivity(i);
 
             }
@@ -73,7 +87,7 @@ public class EditActivity extends AppCompatActivity {
                 dbh.deleteMovie(data.getId());
 
                 Intent i = new Intent(EditActivity.this,
-                        MainActivity.class);
+                        ShowActivity.class);
                 startActivity(i);
 
             }

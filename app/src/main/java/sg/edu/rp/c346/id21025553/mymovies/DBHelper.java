@@ -83,37 +83,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return movies;
     }
 
-    public ArrayList<Movies> getPG13Movies() {
-        ArrayList<Movies> movies = new ArrayList<Movies>();
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        String pg13 = "PG13";
-
-        String selectQuery = "SELECT *" + " FROM " + TABLE_MOVIES + " WHERE "+ COLUMN_RATING + "==" + pg13;
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(0);
-                String title = cursor.getString(1);
-                String genre = cursor.getString(2);
-                int year = cursor.getInt(3);
-                String ratings = cursor.getString(4);
-
-                Movies movie = new Movies(id, title, genre, year, ratings);
-                movies.add(movie);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return movies;
-    }
-
     public ArrayList<Movies> getAllMovies(String rating) {
         ArrayList<Movies> movies = new ArrayList<Movies>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT *" + " FROM " + TABLE_MOVIES + " WHERE "+ COLUMN_RATING + "==" + rating;
+        String selectQuery = "SELECT * FROM " + TABLE_MOVIES + " WHERE "+ COLUMN_RATING + " = '" + rating + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {

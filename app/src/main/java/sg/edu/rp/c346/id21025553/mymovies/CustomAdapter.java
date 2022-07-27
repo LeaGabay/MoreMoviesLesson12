@@ -35,8 +35,8 @@ public class CustomAdapter extends ArrayAdapter {
 
         // Obtain the UI components and do the necessary binding
         TextView tvMovie = rowView.findViewById(R.id.tvMovieTitle);
-        TextView tvGenre = rowView.findViewById(R.id.tvGenre);
-        TextView tvDate = rowView.findViewById(R.id.tvDate);
+        TextView tvGenre = rowView.findViewById(R.id.tvMovieGenre);
+        TextView tvDate = rowView.findViewById(R.id.tvMovieDate);
         ImageView imageView = rowView.findViewById(R.id.imageView);
 
         // Obtain the Movie Information based on the position
